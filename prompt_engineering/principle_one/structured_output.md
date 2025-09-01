@@ -1,4 +1,4 @@
-# Principle 1.3: Ask for Structured Output
+# Ask for Structured Output
 
 This is where engineers immediately see the value — instead of vague or free-form text, we can force structure (JSON, HTML, tables, bullet points). Super useful for things like mock data generation, API responses, or UI snippets.
 

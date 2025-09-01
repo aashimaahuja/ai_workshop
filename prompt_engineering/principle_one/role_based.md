@@ -1,4 +1,4 @@
-# Principle 1.6: Role-based prompting
+# Role-based prompting
 
 ## Example: Writing Technical Documentation
 

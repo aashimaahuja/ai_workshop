@@ -4,9 +4,9 @@ Prompt engineering is the process of writing effective instructions for a model 
 
 ## Why it matters:
 
-- Ensures accurate and reliable outputs
-- Saves time by reducing trial and error
-- Improves clarity in communication with AI
+- **Ensures accurate and reliable outputs**
+- **Saves time by reducing trial and error**
+- **Improves clarity in communication with AI**
 
 ## Principles of writing effective prompts
 

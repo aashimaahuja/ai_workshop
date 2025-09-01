@@ -1,5 +1,3 @@
-[← Back to Introduction](../introduction.md)
-
 # Clear Instructions
 
 ## Example: User Registration Form

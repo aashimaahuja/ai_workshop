@@ -1,4 +1,4 @@
-# Principle 1.4: Check Assumptions Required to Complete the Task
+# Check Assumptions Required to Complete the Task
 
 ## 🔹 Example: Train Departure Schedule
 

@@ -1,4 +1,4 @@
-# Principle 1.5: Few shot prompting
+# Few shot prompting
 
 Few-shot prompting is when you show examples of how a task should be done to AI, so it can learn the pattern, style, and expected output format before completing a new task.
 
