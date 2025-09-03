@@ -3,3 +3,4 @@
 # Virtual Environment
 venv/
 node_modules/
+.ipynb_checkpoints/
