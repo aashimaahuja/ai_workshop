@@ -5,11 +5,12 @@ const marked = require("marked");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
 app.use(express.static("prompt_engineering"));
+app.use(express.static("segment3"));
 app.use(express.json());
 
 // Configure marked for markdown parsing
@@ -27,19 +28,34 @@ app.get("/", (req, res) => {
 app.get("/api/content/:filepath(*)", async (req, res) => {
   try {
     const filepath = req.params.filepath;
-    const fullPath = path.join(__dirname, "prompt_engineering", filepath);
+    
+    // Try segment3 first, then prompt_engineering
+    let fullPath = path.join(__dirname, "segment3", filepath);
+    let resolvedPath = path.resolve(fullPath);
+    let segment3Dir = path.resolve(path.join(__dirname, "segment3"));
+    
+    // Check if file exists in segment3
+    let content;
+    try {
+      if (resolvedPath.startsWith(segment3Dir)) {
+        content = await fs.readFile(fullPath, "utf8");
+      } else {
+        throw new Error("Path not in segment3");
+      }
+    } catch (error) {
+      // Fallback to prompt_engineering
+      fullPath = path.join(__dirname, "prompt_engineering", filepath);
+      resolvedPath = path.resolve(fullPath);
+      const promptEngineeringDir = path.resolve(
+        path.join(__dirname, "prompt_engineering")
+      );
 
-    // Security check: ensure the path is within the prompt_engineering directory
-    const resolvedPath = path.resolve(fullPath);
-    const promptEngineeringDir = path.resolve(
-      path.join(__dirname, "prompt_engineering")
-    );
-
-    if (!resolvedPath.startsWith(promptEngineeringDir)) {
-      return res.status(403).json({ error: "Access denied" });
+      if (!resolvedPath.startsWith(promptEngineeringDir)) {
+        return res.status(403).json({ error: "Access denied" });
+      }
+      
+      content = await fs.readFile(fullPath, "utf8");
     }
-
-    const content = await fs.readFile(fullPath, "utf8");
 
     // Convert markdown to HTML using the marked library
     const htmlContent = marked.parse(content);
@@ -56,6 +72,13 @@ app.get("/prompt-engineering", (req, res) => {
   res.sendFile(path.join(__dirname, "prompt_engineering", "index.html"));
 });
 
+// Serve segment3 index page
+app.get("/segment3", (req, res) => {
+  res.sendFile(path.join(__dirname, "segment3", "index.html"));
+});
+
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 AI Workshop Server running on http://localhost:${PORT}`);
@@ -63,7 +86,13 @@ app.listen(PORT, () => {
     `📚 Prompt Engineering docs: http://localhost:${PORT}/prompt-engineering`
   );
   console.log(
+    `🤖 Segment 3 docs: http://localhost:${PORT}/segment3`
+  );
+  console.log(
     `📖 Direct access: http://localhost:${PORT}/prompt_engineering/index.html`
+  );
+  console.log(
+    `📖 Direct access: http://localhost:${PORT}/segment3/index.html`
   );
 });
 

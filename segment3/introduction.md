@@ -8,19 +8,14 @@ Why should we bother accessing an LLM via an API when I can just use ChatGPT, Cl
 
 Using LLMs via a web interface is like going to a bakery and ordering one croissant. Tastes great! But what if you want to bake croissants at scale, on your schedule, and add your own fillings?
 
-![A bakery illustrating the difference between buying one croissant and baking at scale](./bakery.png)
+<img src="./bakery.png" alt="A bakery illustrating the difference between buying one croissant and baking at scale" width="100%" height="auto" style="max-width: 100%; height: auto;">
 
 That's what APIs allow. APIs let you take the magic behind ChatGPT and plug it directly into your own tools, workflows, and apps.
 
 ## Real-World Examples
 
-### 1. Resume Review Tool
 
-Imagine you're building a resume analyzer that reads a resume PDF and gives instant feedback.
-- **With Web Interface**: You'd have to copy-paste every resume manually
-- **With API**: You can write a script that reads the PDF, sends it to the model, and gets structured feedback — all automatically
-
-### 2. Daily Meeting Summary
+### 1. Daily Meeting Summary
 
 Let's say your team wants an automatic summary of every Zoom call. The transcript gets saved to a folder, and within 30 minutes, a summary appears in Slack.
 
@@ -34,7 +29,7 @@ Let's say your team wants an automatic summary of every Zoom call. The transcrip
 
 And all of this happens while you're making coffee.
 
-### 3. Chatbot in Your Website
+### 2. Chatbot in Your Website
 
 Let's say you want a chatbot on your site that can answer questions about your company's products — 24/7.
 
