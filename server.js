@@ -9,8 +9,6 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors());
-app.use(express.static("prompt_engineering"));
-app.use(express.static("segment3"));
 app.use(express.json());
 
 // Configure marked for markdown parsing
@@ -19,42 +17,63 @@ marked.setOptions({
   gfm: true,
 });
 
-// Routes
+// Routes - Define routes BEFORE static file serving
 app.get("/", (req, res) => {
-  res.redirect("/prompt_engineering/index.html");
+  res.sendFile(path.join(__dirname, "index.html"));
 });
+
+// Static file serving - AFTER routes to avoid conflicts
+app.use(express.static("prompt_engineering"));
+app.use(express.static("segment3"));
+app.use(express.static("segment_4"));
 
 // API endpoint to get markdown content
 app.get("/api/content/:filepath(*)", async (req, res) => {
   try {
     const filepath = req.params.filepath;
-    
-    // Try segment3 first, then prompt_engineering
-    let fullPath = path.join(__dirname, "segment3", filepath);
-    let resolvedPath = path.resolve(fullPath);
-    let segment3Dir = path.resolve(path.join(__dirname, "segment3"));
-    
-    // Check if file exists in segment3
+
+    // Try segment_4 first, then segment3, then prompt_engineering
     let content;
+    let fullPath;
+    let resolvedPath;
+
+    // Check segment_4 first
     try {
-      if (resolvedPath.startsWith(segment3Dir)) {
+      fullPath = path.join(__dirname, "segment_4", filepath);
+      resolvedPath = path.resolve(fullPath);
+      const segment4Dir = path.resolve(path.join(__dirname, "segment_4"));
+
+      if (resolvedPath.startsWith(segment4Dir)) {
         content = await fs.readFile(fullPath, "utf8");
       } else {
-        throw new Error("Path not in segment3");
+        throw new Error("Path not in segment_4");
       }
     } catch (error) {
-      // Fallback to prompt_engineering
-      fullPath = path.join(__dirname, "prompt_engineering", filepath);
-      resolvedPath = path.resolve(fullPath);
-      const promptEngineeringDir = path.resolve(
-        path.join(__dirname, "prompt_engineering")
-      );
+      // Try segment3
+      try {
+        fullPath = path.join(__dirname, "segment3", filepath);
+        resolvedPath = path.resolve(fullPath);
+        const segment3Dir = path.resolve(path.join(__dirname, "segment3"));
 
-      if (!resolvedPath.startsWith(promptEngineeringDir)) {
-        return res.status(403).json({ error: "Access denied" });
+        if (resolvedPath.startsWith(segment3Dir)) {
+          content = await fs.readFile(fullPath, "utf8");
+        } else {
+          throw new Error("Path not in segment3");
+        }
+      } catch (error) {
+        // Fallback to prompt_engineering
+        fullPath = path.join(__dirname, "prompt_engineering", filepath);
+        resolvedPath = path.resolve(fullPath);
+        const promptEngineeringDir = path.resolve(
+          path.join(__dirname, "prompt_engineering")
+        );
+
+        if (!resolvedPath.startsWith(promptEngineeringDir)) {
+          return res.status(403).json({ error: "Access denied" });
+        }
+
+        content = await fs.readFile(fullPath, "utf8");
       }
-      
-      content = await fs.readFile(fullPath, "utf8");
     }
 
     // Convert markdown to HTML using the marked library
@@ -77,7 +96,10 @@ app.get("/segment3", (req, res) => {
   res.sendFile(path.join(__dirname, "segment3", "index.html"));
 });
 
-
+// Serve segment4 index page
+app.get("/segment4", (req, res) => {
+  res.sendFile(path.join(__dirname, "segment_4", "index.html"));
+});
 
 // Start server
 app.listen(PORT, () => {
@@ -85,15 +107,12 @@ app.listen(PORT, () => {
   console.log(
     `📚 Prompt Engineering docs: http://localhost:${PORT}/prompt-engineering`
   );
-  console.log(
-    `🤖 Segment 3 docs: http://localhost:${PORT}/segment3`
-  );
+  console.log(`🤖 Segment 3 docs: http://localhost:${PORT}/segment3`);
   console.log(
     `📖 Direct access: http://localhost:${PORT}/prompt_engineering/index.html`
   );
-  console.log(
-    `📖 Direct access: http://localhost:${PORT}/segment3/index.html`
-  );
+  console.log(`📖 Direct access: http://localhost:${PORT}/segment3/index.html`);
+  console.log(`🚀 Segment 4 docs: http://localhost:${PORT}/segment4`);
 });
 
 // Error handling

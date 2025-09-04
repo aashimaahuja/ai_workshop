@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Workshop - Home</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        width: 100%;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 50px;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 15px;
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .card-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .card h2 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+      }
+
+      .card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 25px;
+      }
+
+      .card-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .card-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .segment-2 {
+        --card-color: #4caf50;
+      }
+
+      .segment-3 {
+        --card-color: #2196f3;
+      }
+
+      .segment-4 {
+        --card-color: #ff9800;
+      }
+
+      .segment-2 .card-icon {
+        color: #4caf50;
+      }
+
+      .segment-3 .card-icon {
+        color: #2196f3;
+      }
+
+      .segment-4 .card-icon {
+        color: #ff9800;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .cards-container {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .card {
+          padding: 30px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🤖 AI Workshop</h1>
+        <p>
+          Explore the world of Artificial Intelligence through our comprehensive
+          learning segments
+        </p>
+      </div>
+
+      <div class="cards-container">
+        <div
+          class="card segment-2"
+          onclick="navigateToSegment('/prompt-engineering')"
+        >
+          <span class="card-icon">📝</span>
+          <h2>Segment 2</h2>
+          <p>
+            Master the art of prompt engineering. Learn how to craft effective
+            prompts, use advanced techniques, and optimize your AI interactions.
+          </p>
+          <a href="/prompt-engineering" class="card-button"
+            >Explore Prompt Engineering</a
+          >
+        </div>
+
+        <div class="card segment-3" onclick="navigateToSegment('/segment3')">
+          <span class="card-icon">⚙️</span>
+          <h2>Segment 3</h2>
+          <p>
+            Dive into practical AI implementations. Explore APIs, models, and
+            hands-on coding examples with real-world applications.
+          </p>
+          <a href="/segment3" class="card-button">Explore Segment 3</a>
+        </div>
+
+        <div class="card segment-4" onclick="navigateToSegment('/segment4')">
+          <span class="card-icon">🚀</span>
+          <h2>Segment 4</h2>
+          <p>
+            Advanced AI concepts and tools. Discover cutting-edge technologies,
+            MCP (Model Context Protocol), and advanced development techniques.
+          </p>
+          <a href="/segment4" class="card-button">Explore Segment 4</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function navigateToSegment(path) {
+        window.location.href = path;
+      }
+
+      // Add some interactive effects
+      document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll(".card");
+
+        cards.forEach((card, index) => {
+          card.style.animationDelay = `${index * 0.1}s`;
+          card.style.animation = "fadeInUp 0.6s ease forwards";
+        });
+      });
+
+      // Add CSS animation
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>
