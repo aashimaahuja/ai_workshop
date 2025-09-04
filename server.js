@@ -32,43 +32,43 @@ app.get("/api/content/:filepath(*)", async (req, res) => {
   try {
     const filepath = req.params.filepath;
 
-    // Try segment_4 first, then segment3, then prompt_engineering
+    // Try prompt_engineering first, then segment_4, then segment3
     let content;
     let fullPath;
     let resolvedPath;
 
-    // Check segment_4 first
+    // Check prompt_engineering first
     try {
-      fullPath = path.join(__dirname, "segment_4", filepath);
+      fullPath = path.join(__dirname, "prompt_engineering", filepath);
       resolvedPath = path.resolve(fullPath);
-      const segment4Dir = path.resolve(path.join(__dirname, "segment_4"));
+      const promptEngineeringDir = path.resolve(
+        path.join(__dirname, "prompt_engineering")
+      );
 
-      if (resolvedPath.startsWith(segment4Dir)) {
+      if (resolvedPath.startsWith(promptEngineeringDir)) {
         content = await fs.readFile(fullPath, "utf8");
       } else {
-        throw new Error("Path not in segment_4");
+        throw new Error("Path not in prompt_engineering");
       }
     } catch (error) {
-      // Try segment3
+      // Try segment_4
       try {
+        fullPath = path.join(__dirname, "segment_4", filepath);
+        resolvedPath = path.resolve(fullPath);
+        const segment4Dir = path.resolve(path.join(__dirname, "segment_4"));
+
+        if (resolvedPath.startsWith(segment4Dir)) {
+          content = await fs.readFile(fullPath, "utf8");
+        } else {
+          throw new Error("Path not in segment_4");
+        }
+      } catch (error) {
+        // Fallback to segment3
         fullPath = path.join(__dirname, "segment3", filepath);
         resolvedPath = path.resolve(fullPath);
         const segment3Dir = path.resolve(path.join(__dirname, "segment3"));
 
-        if (resolvedPath.startsWith(segment3Dir)) {
-          content = await fs.readFile(fullPath, "utf8");
-        } else {
-          throw new Error("Path not in segment3");
-        }
-      } catch (error) {
-        // Fallback to prompt_engineering
-        fullPath = path.join(__dirname, "prompt_engineering", filepath);
-        resolvedPath = path.resolve(fullPath);
-        const promptEngineeringDir = path.resolve(
-          path.join(__dirname, "prompt_engineering")
-        );
-
-        if (!resolvedPath.startsWith(promptEngineeringDir)) {
+        if (!resolvedPath.startsWith(segment3Dir)) {
           return res.status(403).json({ error: "Access denied" });
         }
 

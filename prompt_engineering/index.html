@@ -244,55 +244,10 @@
         <div id="content">
           <div class="content-header">
             <h1>🚀 Prompt Engineering</h1>
-            <p>
-              Welcome to Segment 2: Prompt Engineering. This section covers the
-              principles and techniques for writing effective AI prompts that
-              generate consistent, high-quality outputs.
-            </p>
           </div>
 
           <div class="content-body">
-            <h2>What is Prompt Engineering?</h2>
-            <p>
-              Prompt engineering is the process of writing effective
-              instructions for a model so it consistently generates content that
-              meets your requirements.
-            </p>
-
-            <h2>Why it matters:</h2>
-            <ul>
-              <li><strong>Ensures accurate and reliable outputs</strong></li>
-              <li><strong>Saves time by reducing trial and error</strong></li>
-              <li>
-                <strong>Enables complex use cases</strong> like summarization,
-                data generation, and transformation
-              </li>
-            </ul>
-
-            <h2>Core Principles</h2>
-            <p>
-              Click on any item in the sidebar to explore the detailed
-              techniques and examples for each principle.
-            </p>
-
-            <h3>1. Write Clear and Specific Instructions</h3>
-            <p>
-              Learn how to be explicit about what you want, use delimiters, ask
-              for structured output, check assumptions, use few-shot prompting,
-              and provide specific roles.
-            </p>
-
-            <h3>2. Give Model Time to Think</h3>
-            <p>
-              Discover Chain of Thought (COT) techniques and how to encourage AI
-              to work through problems step by step.
-            </p>
-
-            <h3>3. Make it Iterative</h3>
-            <p>
-              Understand how to refine prompts through iteration and break down
-              complex tasks into manageable subtasks.
-            </p>
+            <div class="loading">Loading introduction...</div>
           </div>
         </div>
       </div>
@@ -371,6 +326,9 @@
             }
           });
         });
+
+        // Load Introduction content by default (since it's the active item)
+        loadContent("introduction");
       });
     </script>
   </body>

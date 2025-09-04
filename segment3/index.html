@@ -192,8 +192,8 @@
 
         <div class="nav-section">
           <h3>Getting Started</h3>
-          <div class="nav-item active" data-content="introduction">
-            Introduction
+          <div class="nav-item active" data-content="why_use_apis">
+            Why Use APIs?
           </div>
         </div>
 
@@ -202,9 +202,7 @@
           <div class="nav-item" data-content="python_installation">
             Python Installation Guide
           </div>
-          <div class="nav-item" data-content="setup">
-            Infra Setup
-          </div>
+          <div class="nav-item" data-content="setup">Infra Setup</div>
         </div>
 
         <div class="nav-section">
@@ -226,9 +224,7 @@
 
         <div class="nav-section">
           <h3>Advanced Techniques</h3>
-          <div class="nav-item" data-content="batching">
-            Batching
-          </div>
+          <div class="nav-item" data-content="batching">Batching</div>
         </div>
 
         <div class="nav-section">
@@ -236,9 +232,7 @@
           <div class="nav-item" data-content="open-weight-models">
             Open Weight Models
           </div>
-          <div class="nav-item" data-content="ollama">
-            Ollama
-          </div>
+          <div class="nav-item" data-content="ollama">Ollama</div>
         </div>
       </div>
 
@@ -247,9 +241,9 @@
           <div class="content-header">
             <h1>🤖 AI Workshop - Segment 3</h1>
             <p>
-              Welcome to Segment 3: AI API Integration. This section covers how to
-              integrate with various AI APIs including OpenAI, Claude, and Gemini
-              to build powerful AI-powered applications.
+              Welcome to Segment 3: AI API Integration. This section covers how
+              to integrate with various AI APIs including OpenAI, Claude, and
+              Gemini to build powerful AI-powered applications.
             </p>
           </div>
 
@@ -262,29 +256,42 @@
 
             <h2>Topics Covered:</h2>
             <ul>
-              <li><strong>Infrastructure Setup</strong> - Setting up your development environment</li>
-              <li><strong>OpenAI API Integration</strong> - Using Python and Node.js</li>
-              <li><strong>Cost & Pricing</strong> - Understanding API costs and optimization</li>
-              <li><strong>Advanced Techniques</strong> - Batching for efficient API usage</li>
-              <li><strong>Open Weight Models</strong> - Working with open-source AI models</li>
+              <li>
+                <strong>Infrastructure Setup</strong> - Setting up your
+                development environment
+              </li>
+              <li>
+                <strong>OpenAI API Integration</strong> - Using Python and
+                Node.js
+              </li>
+              <li>
+                <strong>Cost & Pricing</strong> - Understanding API costs and
+                optimization
+              </li>
+              <li>
+                <strong>Advanced Techniques</strong> - Batching for efficient
+                API usage
+              </li>
+              <li>
+                <strong>Open Weight Models</strong> - Working with open-source
+                AI models
+              </li>
               <li><strong>Ollama</strong> - Running local AI models</li>
             </ul>
 
             <h2>Getting Started</h2>
             <p>
-              Click on any item in the sidebar to explore the detailed
-              tutorials and examples for each topic.
+              Click on any item in the sidebar to explore the detailed tutorials
+              and examples for each topic.
             </p>
 
             <h3>1. Introduction</h3>
-            <p>
-              Overview of AI APIs and what you'll build in this segment.
-            </p>
+            <p>Overview of AI APIs and what you'll build in this segment.</p>
 
             <h3>2. Infrastructure Setup</h3>
             <p>
-              Learn how to set up your development environment and configure
-              API keys for different AI services.
+              Learn how to set up your development environment and configure API
+              keys for different AI services.
             </p>
 
             <h3>3. OpenAI API</h3>
@@ -295,8 +302,9 @@
 
             <h3>4. Cost & Pricing</h3>
             <p>
-              Understand OpenAI API pricing structure, learn how to calculate costs,
-              and discover strategies to optimize your API usage and budget.
+              Understand OpenAI API pricing structure, learn how to calculate
+              costs, and discover strategies to optimize your API usage and
+              budget.
             </p>
 
             <h3>5. Advanced Techniques</h3>
@@ -307,14 +315,15 @@
 
             <h3>6. Open Weight Models</h3>
             <p>
-              Explore open-source AI models and learn how to integrate them
-              into your applications for cost-effective AI solutions.
+              Explore open-source AI models and learn how to integrate them into
+              your applications for cost-effective AI solutions.
             </p>
 
             <h3>7. Ollama</h3>
             <p>
-              Learn how to run AI models locally using Ollama, including installation,
-              model management, and Python client integration for offline AI capabilities.
+              Learn how to run AI models locally using Ollama, including
+              installation, model management, and Python client integration for
+              offline AI capabilities.
             </p>
           </div>
         </div>
@@ -394,6 +403,9 @@
             }
           });
         });
+
+        // Load Why Use APIs content by default (since it's the active item)
+        loadContent("why_use_apis");
       });
     </script>
   </body>
