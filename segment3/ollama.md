@@ -64,8 +64,12 @@ Here's how to interact with Ollama using Python:
 import requests
 
 response = requests.post(
-    "http://localhost:11434/api/generate",
-    json={"model": "llama2", "prompt": "Explain recursion in simple terms"}
+  "http://localhost:11434/api/generate",
+  json={
+    "model": "llama3:8b",
+    "prompt": "Explain recursion in simple terms",
+    "stream": False
+  }
 )
 
 print(response.json()["response"])
