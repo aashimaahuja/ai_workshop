@@ -14,26 +14,15 @@ That's what APIs allow. APIs let you take the magic behind ChatGPT and plug it d
 
 ## Real-World Examples
 
-
-### 1. Daily Meeting Summary
-
-Let's say your team wants an automatic summary of every Zoom call. The transcript gets saved to a folder, and within 30 minutes, a summary appears in Slack.
-
-**Web interface?** Can't help you.
-
-**But with the API**, you can automate:
-- Reading the transcript
-- Sending it to the LLM
-- Formatting the summary
-- Posting it in Slack
-
-And all of this happens while you're making coffee.
-
-### 2. Chatbot in Your Website
+### 1. Chatbot in Your Website
 
 Let's say you want a chatbot on your site that can answer questions about your company's products — 24/7.
 
 You can't do this with the ChatGPT web interface. But you can with the API — because now the model is part of your system, running behind the scenes.
+
+### 2. Products categorisation
+
+In my project , we have a lot of products without any categories. Created a script which runs for all the products and call ai for categorising them
 
 ## Key Advantages of Using APIs
 
