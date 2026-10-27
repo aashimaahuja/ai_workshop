@@ -1,71 +1,72 @@
-# Iteration
+# Evaluate and Iterate
 
-Iteration means: "try something, check if the result is what you want, and then improve it by modifying the prompt with clearer instructions."
+The first result is a draft. Compare it with your success criteria, identify what is missing or incorrect, and then improve the instruction or context.
 
-Just like in coding or debugging, you rarely get it right on the first attempt — you refine until the output matches your needs.
+## The Iteration Loop
 
-## Example: Creating a Meeting Agenda
+1. Define what a good result should include.
+2. Generate a result.
+3. Check the result against the criteria.
+4. Identify the specific problem.
+5. Update the prompt or context and try again.
 
-### Step 1: First Attempt (too vague)
+## Example: Create a Meeting Agenda
+
+### First Attempt
 
 ```
-**Prompt**
-"Create a meeting agenda for a project kickoff."
-
-**Output**
-
+Create a meeting agenda for a project kickoff.
 ```
 
-Project Kickoff Agenda
+Possible result:
 
+```
 1. Introductions
-2. Project Overview
-3. Next Steps
-
+2. Project overview
+3. Next steps
 ```
 
-**➡️ Problem:** Too generic.
-```
+### Evaluate the Result
 
-### Step 2: Iterate — Add More Details
+The agenda looks reasonable, but it is incomplete:
 
-```
-**Prompt**
-"Create a 1-hour meeting agenda for a software project kickoff.
-Include time allocations, goals for each section, and space for Q&A."
+- The meeting length is not defined.
+- Important topics such as technical approach, risks, and Q&A are missing.
+- The agenda does not show an outcome or owner for each section.
 
-**Output**
-
-Project Kickoff Agenda (1 hour)
-
-- 0–10 min: Introductions and roles
-- 10–25 min: Project goals, success metrics
-- 25–40 min: Technical overview (architecture, dependencies)
-- 40–50 min: Risks and challenges
-- 50–60 min: Q&A and next steps
+### Improve the Prompt
 
 ```
+Create a 60-minute agenda for a software project kickoff.
 
-**➡️ Better:** Structured, but still plain text.
+Include:
+- Introductions
+- Project goals
+- Technical approach
+- Risks
+- Q&A and next steps
 
-### Step 3: Iterate Again — Add Formatting + Action Items
-
+The time blocks must total exactly 60 minutes.
+For each section, include an expected outcome and an owner.
+Return the agenda as a Markdown table.
 ```
-**Prompt**
-"Create a software project kickoff agenda (1 hour) with:
 
-- Clear time blocks (in minutes)
-- Focus on backend + frontend engineers
-- Highlight action items for each section
-- Format output in a Markdown table."
+Possible result:
 
-**Output**
+| Time | Topic | Expected outcome | Owner |
+| --- | --- | --- | --- |
+| 0–10 min | Introductions | Roles are clear | Facilitator |
+| 10–20 min | Project goals | Team agrees on goals | Product owner |
+| 20–35 min | Technical approach | Main approach and dependencies are understood | Tech lead |
+| 35–45 min | Risks | Initial risks are recorded | Project manager |
+| 45–55 min | Q&A | Open questions are discussed | Facilitator |
+| 55–60 min | Next steps | Actions and owners are confirmed | Project manager |
 
-| Time      | Topic              | Details                                | Action Items                 |
-| --------- | ------------------ | -------------------------------------- | ---------------------------- |
-| 0–10 min  | Introductions      | Backend & frontend roles               | Note responsibilities        |
-| 10–25 min | Project Goals      | Success metrics, deliverables          | Agree on KPIs                |
-| 25–40 min | Technical Overview | Architecture, APIs, frontend framework | Identify dependencies        |
-| 40–50 min | Risks & Challenges | Scaling, performance risks             | Document risks               |
-| 50–60 min | Q&A & Next Steps   | Open floor, align deliverables         | Assign owners for next tasks |
-```
+### Check Again
+
+- **Correctness:** The time blocks total 60 minutes.
+- **Completeness:** All required topics are included.
+- **Usefulness:** Each section has an outcome and owner.
+- **Formatting:** The table is easy to scan.
+
+Iteration is not about making every prompt longer. Change the instruction or context that caused the specific problem, then evaluate again.

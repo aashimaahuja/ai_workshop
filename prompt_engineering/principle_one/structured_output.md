@@ -1,32 +1,22 @@
 # Ask for Structured Output
 
-This is where engineers immediately see the value — instead of vague or free-form text, we can force structure (JSON, HTML, tables, bullet points). Super useful for things like mock data generation, API responses, or UI snippets.
+Structured output means describing how the response should be organized. This is useful when the result will be read by code or passed to another system.
 
-## 🔹 Example: Generating Mock Data from Schemas
+## Example: Generate Mock User Data
 
-### ❌ Without Structured Output
-
-**Prompt:**
-"Generate mock user data with 3 users."
-
-**Possible Model Output (unstructured):**
+### ❌ Without a Defined Structure
 
 ```
-John Doe, johndoe@email.com, signed up yesterday
-
-Mary Smith, mary.smith@email.com, signed up last week
-
-Alex Chen, alexc@email.com, signed up 2 months ago
+Generate mock data for three users.
 ```
 
-**➡️ Problem:** Looks nice, but it's unstructured text → hard to parse or feed into an app.
+The model might return a paragraph, a list, or JSON. A developer would need to clean up the result before using it.
 
-### ✅ With Structured Output (JSON)
-
-**Prompt:**
-Given a UserSchema, generate mock data for that schema. Return the output in valid JSON format with realistic values that match the schema structure.
+### ✅ With a Defined Structure
 
 ```
+Generate three users that match this schema. Return only a JSON array.
+
 interface UserSchema {
   id: string;
   name: string;
@@ -36,102 +26,31 @@ interface UserSchema {
 }
 ```
 
-**Model Output (structured JSON):**
+### Check the Result
+
+Does this output match the schema?
 
 ```json
 [
   {
     "id": 1,
     "name": "John Doe",
-    "email": "johndoe@email.com",
+    "email": "john@example.com",
     "signup_date": "2025-08-20",
     "subscription_status": "active"
-  },
-  {
-    "id": 2,
-    "name": "Mary Smith",
-    "email": "mary.smith@email.com",
-    "signup_date": "2025-08-15",
-    "subscription_status": "trial"
-  },
-  {
-    "id": 3,
-    "name": "Alex Chen",
-    "email": "alexc@email.com",
-    "signup_date": "2025-07-10",
-    "subscription_status": "inactive"
   }
 ]
 ```
 
-**➡️ Why this is better:**
-
-- **Machine-readable:** The data is structured and can be parsed programmatically
-- **Direct integration:** Can be used directly in an app, API, or tests
-- **Consistency:** Ensures consistent fields, formats, and values
-- **Validation:** Easy to validate against schemas or expected formats
-- **Automation:** Can be fed directly into automated workflows
-
-## 🎯 When to Use Structured Output
-
-- **Mock data generation** for testing and development
-- **API response formatting** to match expected schemas
-- **Database seeding** with consistent data structures
-- **Configuration files** that need specific formats
-- **Data transformation** between different formats
-- **Report generation** with consistent layouts
-
-## 📋 Common Output Formats
-
-### JSON
+Not quite. The schema says `id` must be a string, but the output uses a number. The corrected value is:
 
 ```json
-{
-  "field": "value",
-  "array": [1, 2, 3],
-  "nested": { "key": "value" }
-}
+"id": "1"
 ```
 
-### HTML
+Always check that the response matches the schema before using it.
 
-```html
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Email</th>
-  </tr>
-  <tr>
-    <td>John</td>
-    <td>john@example.com</td>
-  </tr>
-</table>
-```
+## Keep in Mind
 
-### CSV
-
-```csv
-name,email,status
-John,john@example.com,active
-Mary,mary@example.com,inactive
-```
-
-### YAML
-
-```yaml
-users:
-  - name: John
-    email: john@example.com
-    status: active
-  - name: Mary
-    email: mary@example.com
-    status: inactive
-```
-
-## 💡 Best Practices
-
-1. **Be specific about the format** - Don't just say "structured", specify JSON, HTML, etc.
-2. **Define the schema** - List the exact fields and their expected types
-3. **Provide examples** - Show the desired output structure
-4. **Set constraints** - Specify data types, formats, and validation rules
-5. **Test the output** - Verify the generated structure is valid and usable
+- Name the format you need, such as JSON.
+- Define the fields and their types.
