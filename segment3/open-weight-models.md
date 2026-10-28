@@ -1,68 +1,43 @@
 # Open-Weight Models
 
-Understanding model weights is fundamental to knowing the difference between using "hosted" vs "open" LLMs.
+## What Are Model Weights?
 
-Let's break it down clearly:
+Model weights are the learned numerical values that determine how a model responds to input. Training creates these weights.
 
-## 🧠 What Are Model Weights?
+To run a model, software loads its architecture and weights and uses them to generate output.
 
-Model weights are the core numerical parameters inside a machine learning model — the learned values that determine how the model behaves and produces output.
+## What Does Open-Weight Mean?
 
-Think of them as the model's "brain":
+An open-weight model makes its trained weights available for download. Depending on the model and its license, you may be able to:
 
-A trained LLM like GPT-4 or LLaMA 3-8B consists of:
+- Run it on your own computer or server
+- Adapt or fine-tune it
+- Use it without sending prompts to a model provider
 
-- Code (architecture)
-- Weights (billions of floating-point numbers)
+Always check the model's license. A downloadable model may still restrict commercial use, redistribution, or other activities.
 
-🟡 **Without weights**: the model is empty and useless.  
-🟢 **With weights**: it can generate, reason, translate, etc.
+## Open-Weight Is Not the Same as Open Source
 
-## 🔓 What Are Open-Weight Models?
+The terms are often used as if they mean the same thing, but they do not.
 
-Open-weight models are models where both:
+- **Open-weight** means the trained weights are available.
+- **Open source AI** has broader requirements, including access to the components and information needed to study, modify, and share the system.
 
-- The model architecture, and
-- The actual trained weights
+A model can therefore be open-weight without meeting the full definition of open source AI. See the [Open Source AI Definition](https://opensource.org/ai/open-source-ai-definition) for the complete criteria.
 
-are publicly available and downloadable under some license (permissive or restricted).
+## Open-Weight and Closed-Weight Models
 
-You can:
+| | Open-weight model | Closed-weight model |
+|---|---|---|
+| Access to weights | Downloadable | Not provided |
+| Where it can run | Your hardware, your cloud, or a hosting provider | Usually through the provider's service |
+| Customization | Depends on the model and license | Depends on features offered by the provider |
+| Responsibility | You manage hardware, deployment, and updates when self-hosting | The provider manages the model infrastructure |
 
-- Download and run them locally (e.g. via Ollama or Hugging Face)
-- Host them on your own server or cloud
-- Fine-tune them on custom data
+## Why Run an Open-Weight Model Locally?
 
+- Prompts can remain on your machine.
+- The application can work without an internet connection after setup.
+- You control the model version and deployment.
 
-## ✅ Examples of Open-Weight Models
-
-| Model | Organization | License | Notable For |
-|-------|--------------|---------|-------------|
-| LLaMA 3 (8B/70B) | Meta | Custom (non-commercial for now) | High-quality performance |
-| Mixtral | Mistral | Apache 2.0 | Sparse Mixture of Experts (MoE) |
-| Phi-3 | Microsoft | MIT | Small models with strong reasoning |
-| Gemma | Google DeepMind | Apache 2.0 | Lightweight & privacy-preserving |
-| MPT | MosaicML | Apache/MIT | Used for instruction & code tuning |
-| Falcon | TII (UAE) | Apache 2.0 | Early open LLM in the 40B range |
-
-## 🔐 Closed-Weight Models (for contrast)
-
-Closed-weight models do not give you access to the weights.
-
-**Examples**: GPT-4, Claude, Gemini, Command-R+
-
-You can only use them through hosted APIs. You cannot:
-
-- Run them on your own machines
-- Fine-tune them
-- Inspect their internals
-
-## 📌 Why Open Weights Matter
-
-| Benefit | Why it matters |
-|---------|----------------|
-| Local inference | Run on your laptop with no internet |
-| Customization | Fine-tune or train further |
-| Privacy | No data leaves your machine |
-| Cost | Free inference after download |
-| Transparency & auditability | You know exactly what model is running | 
+Local use also has trade-offs. Models require storage and memory, performance depends on your hardware, and you are responsible for keeping the setup secure and maintained.
