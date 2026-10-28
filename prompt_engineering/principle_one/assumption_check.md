@@ -1,72 +1,40 @@
-# Check Assumptions Required to Complete the Task
+# Check Required Information
 
-## 🔹 Example: Train Departure Schedule
+Before starting a task, check whether any required information is missing. Ask about details that block the task, but do not stop for optional information.
 
-### ❌ Fragile Prompt (No Assumption Check)
+## Example: Train Departure Schedule
 
-```
-"Show me a train departure schedule for tomorrow in a table."
-```
-
-#### ➡️ Problems:
-
-- **Which station/route?** - Departure and destination unclear
-- **What time window?** - All day? Morning only? Specific hours?
-
-### ✅ Robust Prompt (Assumption Check + Fallback)
-
-#### Prompt Structure:
+### ❌ Prompt with Missing Information
 
 ```
-Task: Provide tomorrow's train departure schedule in a table.
+Show me a train departure schedule for tomorrow in a table.
+```
 
-Before proceeding, perform an ASSUMPTION CHECK:
+**➡️ Problem:** The departure station is required, but it has not been provided.
 
-- Departure station (required)
-- Destination station (optional, but affects filtering)
-- Time range (default: 06:00–22:00 local time)
+### ✅ Prompt with an Assumption Check
 
-If any assumption is missing:
-Return ONLY this fallback JSON:
-{
-  "status": "needs_clarification",
-  "missing": [...],
-  "questions": [...],
-  "proposed_defaults": {
-    "time_range": "06:00–22:00",
-    "timezone": "Europe/Amsterdam",
-    "data_source": "mock_allowed"
-  }
-}
+```
+Task: Show tomorrow's train departures in a table.
 
-If assumptions are satisfied:
-Return ONLY a Markdown table with columns:
+Required information:
+- Departure station
+
+Optional information:
+- Destination. If omitted, show all destinations.
+- Time range. If omitted, use 06:00–22:00 local time.
+
+Before starting:
+- If the departure station is missing, ask: "Which station would you like departures from?"
+- If you cannot access live schedule data, say so and ask the user to provide a source. Do not invent a timetable.
+
+When the required information and schedule data are available, return a table with:
 | Time | Train No. | Destination | Platform | Status |
 ```
 
-🔹 Fallback Output (if info missing)
+## Two Different Checks
 
-```
-{
-  "status": "needs_clarification",
-  "missing": [
-    "No departure station specified.",
-    "No destination specified (optional but recommended)."
-  ],
-  "questions": [
-    "From which station do you want departures?",
-    "Do you want arrivals filtered by destination?",
-    "Should I use real API data or mock realistic times?"
-  ],
-  "proposed_defaults": {
-    "time_range": "06:00–22:00",
-    "timezone": "Europe/Amsterdam",
-    "data_source": "mock_allowed"
-  }
-}
-```
+- **Missing task information:** Ask for the departure station because the task cannot continue without it.
+- **Missing data access:** Explain that live schedule data is unavailable and ask for a source.
 
-Adding assumption checks + fallbacks avoid hallucination and force the model to either:
-
-- Ask for missing info
-- Or return a clean, structured table when all is clarified.
+Optional details such as destination should not block the task.

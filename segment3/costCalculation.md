@@ -1,58 +1,42 @@
 # Cost Calculation Guide
 
-## ChatGPT-4o-mini Pricing
+## How API Costs Work
 
-### OpenAI API Costs
+OpenAI API usage is generally charged by tokens:
 
-**Input Tokens**: `$0.60` per 1 million tokens  
-**Output Tokens**: `$2.40` per 1 million tokens
+- **Input tokens** are the text you send to the model.
+- **Output tokens** are the text the model generates.
 
-### Understanding Token Costs
+Prices vary by model and may change. The example below uses `$0.60` per million input tokens and `$2.40` per million output tokens only to demonstrate the calculation. Check the [OpenAI API pricing page](https://developers.openai.com/api/docs/pricing) for the current prices of the model you are using.
 
-When using the OpenAI API, you're charged based on the number of tokens processed:
+## Calculate the Estimated Cost
 
-- **Input tokens**: The text you send to the API (your prompts, questions, etc.)
-- **Output tokens**: The text the API generates in response
+The Responses API returns a `usage` object with the number of input and output tokens used.
 
-### Cost Calculation Examples
-
-#### Example 1: Simple Question
-- **Input**: "What is the capital of France?" (7 tokens)
-- **Output**: "The capital of France is Paris." (8 tokens)
-- **Cost**: 
-  - Input: (7 × $0.60/1,000,000 )= $0.0000042
-  - Output: (8 × $2.40/1,000,000)  = $0.0000192
-  - **Total**: $0.0000234
-
-### Calculating cost while working with APIs
-
-Chat completions api return us "usage" object in response
-This usage object contains
-- prompt_tokens -> which is your input tokens
-- completion_tokens -> output tokens
-
-```
-
-rate_in = 0.60/1000000
-rate_out = 2.40/1000000
-
-response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "system", "content":instruction}, {"role":"user", "content": prompt}],
-        temperature=0,
-)
-
+```python
 usage = response.usage
-cost = usage.prompt_tokens*rate_in + usage.completion_tokens*rate_out
 
+# Example prices only. Actual prices depend on the model.
+input_price_per_million = 0.60
+output_price_per_million = 2.40
+
+input_cost = usage.input_tokens / 1_000_000 * input_price_per_million
+output_cost = usage.output_tokens / 1_000_000 * output_price_per_million
+total_cost = input_cost + output_cost
+
+print(f"Estimated cost: ${total_cost:.6f}")
 ```
 
+The calculation is:
 
+```text
+(input tokens / 1,000,000 × input price) +
+(output tokens / 1,000,000 × output price)
+```
 
+## Cost Optimization Tips
 
-### Cost Optimization Tips
-
-1. **Keep prompts concise** - Shorter inputs mean lower costs
-2. **Use system messages efficiently** - Set context once, not repeatedly
-3. **Batch requests** - Process multiple items in single API calls
-4. **Monitor token usage** - Track your consumption to stay within budget
+1. Keep prompts focused and avoid unnecessary text.
+2. Ask for only the amount of output you need.
+3. Use the Batch API for work that does not need an immediate response.
+4. Track token usage to understand where costs come from.

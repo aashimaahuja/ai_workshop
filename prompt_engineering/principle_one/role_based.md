@@ -1,88 +1,27 @@
-# Role-based prompting
+# Use a Role to Set Perspective
 
-## Example: Writing Technical Documentation
+A role can guide the model's focus, audience, or tone. It does not provide missing facts or replace clear instructions.
 
-### ❌ Without Role
+## Example: Reviewing a Registration Form
 
-**Prompt**
-"Write documentation for the new Payment API."
+### General Prompt
 
-**Output (generic):**
-
-The Payment API allows you to process payments.  
-It has an endpoint `/payments` where you can send POST requests with amount and currency.  
-Response will confirm success or failure.
-
-**➡️ Problem:** Very basic, lacks structure, missing best practices.
-
-### ✅ With Role (Senior Software Architect)
-
-**Prompt**
-"You are a Senior Software Architect. Write technical documentation for the new Payment API.
-
-- Include authentication, request/response structure, error handling, and best practices.
-
-- Use professional tone and enterprise-level standards."
-
-**Output (professional, structured):**
-
-<details>
-<summary><strong>📋 Payment API Documentation (Click to expand)</strong></summary>
-
-# Payment API Documentation
-
-## Overview
-
-The Payment API provides a secure interface for initiating and processing
-customer transactions.
-
-## Authentication
-
-All requests must include a valid Bearer token in the Authorization header.
-Example: `Authorization: Bearer <token>`
-
-## Endpoint: Create Payment
-
-`POST /payments`
-
-### Request Body
-
-```json
-{
-  "amount": 100.0,
-  "currency": "USD",
-  "payment_method": "card"
-}
+```
+Review this registration form. Identify issues and suggest improvements.
 ```
 
-### Response
+The review could focus on design, validation, code quality, or something else.
 
-```json
-{
-  "status": "success",
-  "transaction_id": "txn_12345",
-  "timestamp": "2025-08-25T14:30:00Z"
-}
+### Prompt with a Role
+
+```
+You are an accessibility reviewer.
+
+Review this registration form. Identify issues and suggest improvements.
 ```
 
-### Error Handling
+The role gives the review a clear perspective. It is more likely to focus on labels, keyboard use, error messages, and other accessibility concerns.
 
-- **400 Bad Request** – invalid parameters
-- **401 Unauthorized** – missing or invalid token
-- **500 Internal Server Error** – unexpected failure
+## Keep in Mind
 
-### Best Practices
-
-- Always retry on 500 with exponential backoff.
-- Log transaction IDs for reconciliation.
-- Use HTTPS exclusively for all requests.
-
-</details>
-
----
-
-## 🎯 TLDR
-
-- The **role** gives context → the AI "thinks" like a Senior Architect.
-
-- Output becomes **structured, detailed, professional**, not generic.
+Use a role when a specific perspective is useful. Still provide the task, requirements, and source material the model needs.

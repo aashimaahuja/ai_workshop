@@ -1,155 +1,114 @@
-# Ollama - Local AI Models
+# Ollama
+
+Ollama provides tools and an API for running models. This lesson uses a local model, so prompts and responses are processed on your computer. Ollama also supports cloud models, which run on Ollama's servers.
 
 ## Install Ollama
 
-### macOS
+Use the instructions on the [Ollama download page](https://ollama.com/download), or run the command for your operating system.
+
+### macOS and Linux
 
 ```bash
-curl -fsSL https://ollama.ai/install.sh | sh
+curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-### Linux
+### Windows PowerShell
 
-```bash
-curl -fsSL https://ollama.ai/install.sh | sh
+```powershell
+irm https://ollama.com/install.ps1 | iex
 ```
 
-### Windows
-
-Download the installer from [https://ollama.ai/download](https://ollama.ai/download)
-
-## Verify Installation
-
-After installation, verify that Ollama is working correctly:
+Verify the installation:
 
 ```bash
 ollama --version
 ```
 
-You should see the version number displayed, confirming successful installation.
+## Run a Local Model
 
-## Run First Model
-
-### Start Ollama Service
-
-First, start the Ollama service:
+This example uses `gemma3:1b`, a small model suitable for learning:
 
 ```bash
-ollama serve
+ollama pull gemma3:1b
+ollama run gemma3:1b
 ```
 
-This will start the Ollama server on `http://localhost:11434`
+The Ollama application normally starts the local server. On Linux, run `ollama serve` if the server is not already running. The local API is available at `http://localhost:11434`.
 
-### Pull and Run a Model
+## Call the Local API with Python
 
-Pull your first model (e.g., Llama 2):
-
-```bash
-ollama pull llama2
-```
-
-Run the model interactively:
-
-```bash
-ollama run llama2
-```
-
-You can now chat with the model directly in your terminal.
-
-## Python Client Example
-
-Here's how to interact with Ollama using Python:
+You can call Ollama's HTTP API with `requests`:
 
 ```python
 import requests
 
 response = requests.post(
-  "http://localhost:11434/api/generate",
-  json={
-    "model": "llama3:8b",
-    "prompt": "Explain recursion in simple terms",
-    "stream": False
-  }
+    "http://localhost:11434/api/chat",
+    json={
+        "model": "gemma3:1b",
+        "messages": [
+            {"role": "user", "content": "Explain recursion in simple terms."}
+        ],
+        "stream": False,
+    },
+    timeout=120,
 )
+response.raise_for_status()
 
-print(response.json()["response"])
+print(response.json()["message"]["content"])
 ```
 
-### Alternative Python Client
+## Use the Official Python Library
 
-You can also use the official Ollama Python client:
+Install the library:
 
 ```bash
 pip install ollama
 ```
 
-```python
-import ollama
+Then call the model:
 
-response = ollama.generate('llama2', 'Explain recursion in simple terms')
-print(response['response'])
+```python
+from ollama import chat
+
+response = chat(
+    model="gemma3:1b",
+    messages=[
+        {"role": "user", "content": "Explain recursion in simple terms."}
+    ],
+)
+
+print(response.message.content)
 ```
 
-## Node.js Client Example
+## Use the JavaScript Library
 
-Here's how to interact with Ollama using Node.js:
-
-### Install Ollama Node.js Client
+Install the library:
 
 ```bash
 npm install ollama
 ```
 
-### Basic Usage
+Then call the model:
 
 ```javascript
 import ollama from "ollama";
 
 const response = await ollama.chat({
-  model: model,
-  messages: [{ role: "user", content: prompt }],
-  temperature: 0.5,
+  model: "gemma3:1b",
+  messages: [
+    { role: "user", content: "Explain recursion in simple terms." },
+  ],
 });
 
-const summary = response.message.content;
-return summary;
+console.log(response.message.content);
 ```
 
-## Model Management
-
-### List Models
+## Manage Downloaded Models
 
 ```bash
 ollama list
+ollama rm gemma3:1b
 ```
 
-### Remove Model
-
-```bash
-ollama rm llama3:8b
-```
-
-### Pull Specific Model Versions
-
-```bash
-ollama pull llama2:7b
-ollama pull llama2:13b
-```
-
-## API Endpoints
-
-Ollama provides a REST API at `http://localhost:11434`:
-
-- **Generate**: `POST /api/generate` - Generate text completions
-- **Chat**: `POST /api/chat` - Chat with models
-- **List**: `GET /api/tags` - List available models
-- **Pull**: `POST /api/pull` - Download a model
-- **Delete**: `DELETE /api/delete` - Remove a model
-
-## Tips and Best Practices
-
-1. **Model Selection**: Start with smaller models (7B parameters) for faster inference
-2. **Hardware Requirements**: Ensure you have sufficient RAM and storage for models
-3. **GPU Acceleration**: Ollama automatically uses GPU if available
-4. **Model Caching**: Models are cached locally after first download
-5. **API Rate Limiting**: Be mindful of request frequency in production applications
+Choose a model that fits your machine. Larger models generally need more memory and storage and may respond more slowly on limited hardware.

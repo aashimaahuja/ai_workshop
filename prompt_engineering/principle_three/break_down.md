@@ -1,31 +1,30 @@
-# Break Down Complex Tasks
+# Break Down a Complex Task
 
-Instead of asking AI to do a big task all at once, split it into smaller subtasks. Each subtask has its own deliverable and can be solved step by step.
+A complex task can be easier to understand and complete when it is split into smaller steps.
 
-## 🔹 Example: User Login Functionality
+## Example: Build User Login
 
-### ❌ Vague Prompt
+### Doing Everything at Once
 
-"Build user login."
+```
+Build user login for our application.
+```
 
-**➡️ Problem:** Too broad, unclear what steps are needed.
+This leaves many parts of the task unclear.
 
-### ✅ Broken-Down Prompt
+### Break It into Steps
 
-"Break down 'User Login' into subtasks. Show each step with deliverable and test criteria."
+```
+Break the user login task into smaller steps before writing any code.
+```
 
-- Decide auth method Session Vs JWT
-- Create user model
-- Build login API (/auth/login endpoint)
-- Add validation
-- UI form
+Possible steps:
 
----
+1. Decide how login should work.
+2. Build the login API.
+3. Build the login form.
+4. Connect and test the complete flow.
 
-## Key Takeaway
+Breaking down the task makes each part easier to understand, complete, and review.
 
-**Big request** → vague, risky output.
-
-**Small subtasks** → clear, structured, testable outputs.
-
-**Works like breaking a project into user stories in real life.**
+**Tip:** Many agentic coding tools include a Plan mode. It lets you review the steps before the agent starts changing code.
