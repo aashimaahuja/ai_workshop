@@ -1,92 +1,130 @@
-## 🧠 Batching with OpenAI API in Python
-Batching allows you to summarize or process multiple texts efficiently. It’s useful for scaling, cost optimization, and cleaner code structure.
+# Process Many Requests with the Batch API
 
-### ✅ Why Use Batching?
-- Efficient: Reduce the number of HTTP calls
-- Cost-aware: You can batch smaller texts together
-- Scalable: Automate summarizing many docs in a loop or in one request
+Use the Batch API when you have many independent tasks and do not need the results immediately.
 
-There is a token limit for input. So use batching if the tokens are within the input limit
+Imagine an online store with hundreds of uncategorized products. The categories are needed tomorrow, so the requests can run in the background.
 
-### Example - Summarising multiple documents
+## Normal Requests vs Batch API
 
-- **Option A**: One API call per document (looped — basic batching)
-- **Option B**: One API call for multiple documents in a single request (concatenated prompts or messages)
+| Normal request | Batch API |
+| --- | --- |
+| Returns a result immediately | Processes requests in the background |
+| Useful for interactive features | Useful for large offline jobs |
+| Send one request at a time | Upload many requests in one file |
 
+A Python loop that sends normal API requests is not the Batch API. Use a loop when your application needs each result immediately.
 
-Option A is better if you want individual metadata or streaming, while Option B is cheaper and faster if docs are small.
+## Example: Categorize Products
 
-### Loop-Based Batching (1 request per doc)
+We will categorize these products:
+
 ```python
-
-documents = [
-    """OpenAI released GPT-4o in May 2024, a model that combines text, vision, and audio capabilities. It supports faster response time and is cheaper to run than GPT-4-turbo.""",
-
-    """During the recent strategy call, the team agreed to sunset the legacy dashboard product by the end of Q3. Focus will shift toward AI-powered analytics modules instead.""",
-
-    """Anthropic’s Claude 3 Opus is gaining traction in enterprise due to its strong context window and safety features. It’s often compared with GPT-4 and Gemini 1.5 Pro."""
+products = [
+    {
+        "id": "product-101",
+        "name": "Trail Running Shoes",
+        "description": "Lightweight shoes for running on rocky paths."
+    },
+    {
+        "id": "product-102",
+        "name": "Wireless Headphones",
+        "description": "Noise-cancelling headphones with Bluetooth."
+    },
+    {
+        "id": "product-103",
+        "name": "Ceramic Table Lamp",
+        "description": "A small lamp for a bedside table or desk."
+    }
 ]
-
-summaries = []
-
-for i, doc in enumerate(documents):
-    response = client.responses.create(
-        model="gpt-4o-mini",
-        instructions="You are a concise summarizer.",
-        input=f"Summarize the following document:\n\n{doc}",
-        temperature=0.3
-    )
-    summary = response.output_text.strip()
-    summaries.append(summary)
-
-for i, s in enumerate(summaries):
-    print(f"📄 Document {i+1} Summary:\n{s}\n")
-
-
 ```
 
-### Single Request with Multiple Docs
+## Step 1: Create the Batch File
+
+The Batch API accepts a JSONL file. Each line contains one API request.
 
 ```python
-prompt = "Summarize each of the following documents in 1–2 lines:\n\n"
-for idx, doc in enumerate(documents):
-    prompt += f"Document {idx+1}:\n{doc.strip()}\n\n"
+import json
 
-response_batch = client.responses.create(
-    model="gpt-4o-mini",
-    instructions="You are a concise summarizer that returns numbered bullet points.",
-    input=prompt,
-    temperature=0.3
+with open("product_batch.jsonl", "w") as batch_file:
+    for product in products:
+        request = {
+            "custom_id": product["id"],
+            "method": "POST",
+            "url": "/v1/responses",
+            "body": {
+                "model": "gpt-4o-mini",
+                "instructions": "Choose one category: Clothing, Electronics, Home, or Sports.",
+                "input": f"{product['name']}: {product['description']}"
+            }
+        }
+
+        batch_file.write(json.dumps(request) + "\n")
+```
+
+`custom_id` connects each result to the original product. Results may not be returned in the same order as the requests.
+
+## Step 2: Upload the File
+
+```python
+with open("product_batch.jsonl", "rb") as batch_file:
+    uploaded_file = client.files.create(
+        file=batch_file,
+        purpose="batch"
+    )
+
+print(uploaded_file.id)
+```
+
+## Step 3: Start the Batch
+
+```python
+batch = client.batches.create(
+    input_file_id=uploaded_file.id,
+    endpoint="/v1/responses",
+    completion_window="24h"
 )
 
-print(response_batch.output_text.strip())
+print(batch.id)
+print(batch.status)
 ```
 
-### Track Token Usage & Cost
+The request returns a batch ID immediately. The product categories are generated in the background.
+
+## Step 4: Check the Status
+
+Run this later using the batch ID:
 
 ```python
-rate_in = 0.00025 / 1000
-rate_out = 0.00050 / 1000
-total_cost = 0.0
-
-for i, doc in enumerate(documents):
-    response = client.responses.create(
-        model="gpt-4o-mini",
-        instructions="You are a summarizer.",
-        input=f"Summarize this:\n\n{doc}"
-    )
-    usage = response.usage
-    cost = usage.input_tokens * rate_in + usage.output_tokens * rate_out
-    total_cost += cost
-    print(f"Doc {i+1} cost: ${cost:.6f}")
-
-print(f"🧾 Total cost: ${total_cost:.6f}")
+batch = client.batches.retrieve(batch.id)
+print(batch.status)
 ```
 
-⚖️ Comparison
+Wait until the status is `completed` before downloading the results.
 
-| Approach          | Pros                            | Cons                          |
-| ----------------- | ------------------------------- | ----------------------------- |
-| Loop/Per Doc      | Easier to debug, flexible       | More API calls                |
-| Single Batch Call | Cheaper, faster for short texts | Context size limited (\~128k) |
+## Step 5: Download the Results
 
+```python
+file_response = client.files.content(batch.output_file_id)
+
+with open("product_batch_results.jsonl", "w") as output_file:
+    output_file.write(file_response.text)
+```
+
+Each line in the output file contains the result for one request:
+
+```python
+with open("product_batch_results.jsonl") as output_file:
+    for line in output_file:
+        result = json.loads(line)
+        print(result["custom_id"], result["response"]["status_code"])
+```
+
+Use `custom_id` to match each result to the correct product.
+
+## What to Remember
+
+- Use normal requests when the user is waiting for an answer.
+- Use the Batch API for large jobs that can finish later.
+- Put one request on each line of the JSONL file.
+- Give every request a unique `custom_id`.
+- Check the batch status before downloading the results.
