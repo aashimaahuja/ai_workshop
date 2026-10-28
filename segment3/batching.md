@@ -30,15 +30,13 @@ documents = [
 summaries = []
 
 for i, doc in enumerate(documents):
-    response = client.chat.completions.create(
+    response = client.responses.create(
         model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a concise summarizer."},
-            {"role": "user", "content": f"Summarize the following document:\n\n{doc}"}
-        ],
+        instructions="You are a concise summarizer.",
+        input=f"Summarize the following document:\n\n{doc}",
         temperature=0.3
     )
-    summary = response.choices[0].message.content.strip()
+    summary = response.output_text.strip()
     summaries.append(summary)
 
 for i, s in enumerate(summaries):
@@ -54,16 +52,14 @@ prompt = "Summarize each of the following documents in 1–2 lines:\n\n"
 for idx, doc in enumerate(documents):
     prompt += f"Document {idx+1}:\n{doc.strip()}\n\n"
 
-response_batch = client.chat.completions.create(
+response_batch = client.responses.create(
     model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": "You are a concise summarizer that returns output as numbered bullet points."},
-        {"role": "user", "content": prompt}
-    ],
+    instructions="You are a concise summarizer that returns numbered bullet points.",
+    input=prompt,
     temperature=0.3
 )
 
-print(response_batch.choices[0].message.content.strip())
+print(response_batch.output_text.strip())
 ```
 
 ### Track Token Usage & Cost
@@ -74,15 +70,13 @@ rate_out = 0.00050 / 1000
 total_cost = 0.0
 
 for i, doc in enumerate(documents):
-    response = client.chat.completions.create(
+    response = client.responses.create(
         model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a summarizer."},
-            {"role": "user", "content": f"Summarize this:\n\n{doc}"}
-        ]
+        instructions="You are a summarizer.",
+        input=f"Summarize this:\n\n{doc}"
     )
     usage = response.usage
-    cost = usage.prompt_tokens * rate_in + usage.completion_tokens * rate_out
+    cost = usage.input_tokens * rate_in + usage.output_tokens * rate_out
     total_cost += cost
     print(f"Doc {i+1} cost: ${cost:.6f}")
 
@@ -95,5 +89,4 @@ print(f"🧾 Total cost: ${total_cost:.6f}")
 | ----------------- | ------------------------------- | ----------------------------- |
 | Loop/Per Doc      | Easier to debug, flexible       | More API calls                |
 | Single Batch Call | Cheaper, faster for short texts | Context size limited (\~128k) |
-
 

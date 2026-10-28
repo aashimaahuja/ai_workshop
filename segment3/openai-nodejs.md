@@ -61,16 +61,14 @@ const openai = new OpenAI({
 
 // Sample test to verify setup
 const test = async () => {
-  const response = await openai.chat.completions.create({
+  const response = await openai.responses.create({
     model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: 'You are a helpful assistant.' },
-      { role: 'user', content: 'Say hello in one sentence.' }
-    ],
+    instructions: 'You are a helpful assistant.',
+    input: 'Say hello in one sentence.',
     temperature: 0.5
   });
 
-  console.log(response.choices[0].message.content);
+  console.log(response.output_text);
 };
 
 test();
@@ -128,16 +126,14 @@ const inputText = `Large language models (LLMs) are a type of artificial intelli
 
 ```javascript
 const summarize = async () => {
-  const response = await openai.chat.completions.create({
+  const response = await openai.responses.create({
     model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: 'You are a helpful assistant that summarizes text.' },
-      { role: 'user', content: `Summarize the following text:\n\n${inputText}` }
-    ],
+    instructions: 'You are a helpful assistant that summarizes text.',
+    input: `Summarize the following text:\n\n${inputText}`,
     temperature: 0.5
   });
 
-  console.log('📝 Summary:\n', response.choices[0].message.content.trim());
+  console.log('📝 Summary:\n', response.output_text.trim());
 };
 
 summarize();
