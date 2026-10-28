@@ -63,13 +63,13 @@ print(response.output_text)
 
 ---
 
-## Structured Output with OpenAI API
+## Control the Response Format
 
-The OpenAI API can be used to generate structured outputs like bullet points or JSON format. This is particularly useful when you need to process the response programmatically or present information in a specific format.
+You can ask the model to present ordinary text in a particular format, such as bullet points.
 
 ### Bullet Point Summary
 
-To get a bullet-point summary, you can modify the system prompt and user request:
+To get a bullet-point summary, change the instructions and input:
 
 ```python
 response_bullets = client.responses.create(
@@ -82,42 +82,29 @@ response_bullets = client.responses.create(
 print(response_bullets.output_text)
 ```
 
-### JSON Format Output
+## Structured Output
 
-For JSON output, you can specify the desired structure in your prompt:
-
-```python
-response_json = client.responses.create(
-    model="gpt-4o-mini",
-    instructions="Return summaries in JSON format.",
-    input=f"Summarize the following text and return a JSON object with a 'summary' field and a 'key_points' array of strings:\n\n{input_text}",
-    temperature=0.4
-)
-
-print(response_json.output_text)
-```
-
-### Custom Structure
-
-You can also define your own custom structure based on your needs:
+When your application expects specific fields, define the structure in code instead of describing JSON in the prompt.
 
 ```python
-response = client.responses.create(
+from pydantic import BaseModel
+
+
+class Summary(BaseModel):
+    summary: str
+    key_points: list[str]
+
+
+response = client.responses.parse(
     model="gpt-4o-mini",
-    instructions="Extract structured information from text.",
-    input=f"""Extract information in the following format:
-        {{
-            "topics": [],
-            "entities": [],
-            "sentiment": "",
-            "action_items": []
-        }}
-        Text to analyze:
-        {input_text}""",
-    temperature=0.5
+    instructions="Summarize the provided text.",
+    input=input_text,
+    text_format=Summary
 )
 
-# Parse and use the structured output
-structured_data = response.output_text
-
+result = response.output_parsed
+print(result.summary)
+print(result.key_points)
 ```
+
+The SDK parses the response using the schema. The schema checks the structure, but you should still check whether the information itself is correct.
